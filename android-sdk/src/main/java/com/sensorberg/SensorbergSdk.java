@@ -25,6 +25,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -299,7 +300,11 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
         String processName = "";
         int pID = android.os.Process.myPid();
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo processInfo : activityManager.getRunningAppProcesses()) {
+        List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+        if (processes == null) {
+            return false;
+        }
+        for (ActivityManager.RunningAppProcessInfo processInfo : processes) {
             if (processInfo.pid == pID) {
                 processName = processInfo.processName;
                 break;
