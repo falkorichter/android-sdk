@@ -24,11 +24,9 @@ public class GeofenceData implements Parcelable {
     @Getter private final double latitude;
     @Getter private final double longitude;
     @Getter private final int radius;
-    @Getter private final boolean mock;
 
-    protected GeofenceData(String fence, boolean mock) {
+    protected GeofenceData(String fence) {
         this.fence = fence;
-        this.mock = mock;
         String problem = check(fence);
         if (problem != null) {
             throw new IllegalArgumentException(problem);
@@ -54,7 +52,6 @@ public class GeofenceData implements Parcelable {
         latitude = in.readDouble();
         longitude = in.readDouble();
         radius = in.readInt();
-        mock = in.readByte() != 0;
     }
 
     private static String check(String geofenceId) {
@@ -78,11 +75,7 @@ public class GeofenceData implements Parcelable {
         ArrayList<GeofenceData> result = new ArrayList<>();
         for (Geofence geofence : event.getTriggeringGeofences()) {
             try {
-                boolean mock = false;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    mock = event.getTriggeringLocation().isFromMockProvider();
-                }
-                result.add(new GeofenceData(geofence.getRequestId(), mock));
+                result.add(new GeofenceData(geofence.getRequestId()));
             } catch (IllegalArgumentException ex) {
                 Logger.log.logError(ex.getMessage());
             }
@@ -138,7 +131,6 @@ public class GeofenceData implements Parcelable {
         parcel.writeDouble(latitude);
         parcel.writeDouble(longitude);
         parcel.writeInt(radius);
-        parcel.writeByte((byte) (mock ? 1 : 0));
     }
 
     @Override

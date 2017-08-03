@@ -2,55 +2,22 @@
 buildscript {
 	System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
     repositories {
-        mavenCentral()
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.4.8"
     }
-}
-
-plugins {
-  id "org.sonarqube" version "2.0.1"
 }
 
 allprojects {
     repositories {
-        mavenCentral()
         jcenter()
-        maven { url "https://jitpack.io" }
+        //maven { url "https://jitpack.io" }
     }
-    project.ext.SDK_VERSION = "2.3.3"
+    project.ext.SDK_VERSION = "2.3.4"
     project.ext.RC_VERSION = "-RAILS"
     project.ext.buildToolsVersion = "25.0.2"
     project.ext.compileSdkVersion = 23
     project.ext.targetSdkVersion = 23
-
-    project.ext.libraryBuild = false;
-    apply plugin: "com.jfrog.artifactory"
-}
-
-task librarybuild << {
-    allprojects {
-        project.ext.libraryBuild = true;
-    }
-}
-
-task test {
-    def descriptionString = "There are no unit tests anymore, they have all moved to the library project as integration tests. Run the connectedAndroidTest task!"
-    doLast{
-        println(descriptionString)
-    }
-    description descriptionString
-}
-
-artifactoryPublish {
-    // https://oss.jfrog.org/artifactory/oss-release-local/com/sensorberg/sdk
-    description 'Publishes artifacts to oss.jfrog.org -> SNAPSHOTS'
 }

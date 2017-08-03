@@ -295,7 +295,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
         }
     }
 
-    private static boolean isSensorbergProcess(Context context) {
+    public static boolean isSensorbergProcess(Context context) {
         String processName = "";
         int pID = android.os.Process.myPid();
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
