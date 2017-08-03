@@ -89,15 +89,7 @@ public class GeofenceReceiver extends BroadcastReceiver {
         if (result != null) {
             Location location = result.getLastLocation();
             if (location != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    if (!BuildConfig.DEBUG && location.isFromMockProvider()) {
-                        Logger.log.geofenceError("Mock location on non-debug build, ignoring", null);
-                    } else {
-                        service.putExtra(SensorbergServiceMessage.EXTRA_LOCATION, location);
-                    }
-                } else {
-                    service.putExtra(SensorbergServiceMessage.EXTRA_LOCATION, location);
-                }
+                service.putExtra(SensorbergServiceMessage.EXTRA_LOCATION, location);
             }
         }
         if (availability != null) {
@@ -133,15 +125,11 @@ public class GeofenceReceiver extends BroadcastReceiver {
             for (GeofenceData geofenceData : geofenceDatas) {
                 Logger.log.geofence("Received "+ (entry ? "entry" : "exit") +
                         " event "+geofenceData.getGeohash() + ", radius "+geofenceData.getRadius());
-                if (!BuildConfig.DEBUG && geofenceData.isMock()) {
-                    Logger.log.geofenceError("Geofence from mock location on non-debug build, ignoring", null);
-                } else {
-                    Intent service = SensorbergServiceIntents.getServiceIntentWithMessage(
-                            context, SensorbergServiceMessage.MSG_GEOFENCE_EVENT);
-                    service.putExtra(SensorbergServiceMessage.EXTRA_GEOFENCE_DATA, geofenceData);
-                    service.putExtra(SensorbergServiceMessage.EXTRA_GEOFENCE_ENTRY, entry);
-                    context.startService(service);
-                }
+              Intent service = SensorbergServiceIntents.getServiceIntentWithMessage(
+                  context, SensorbergServiceMessage.MSG_GEOFENCE_EVENT);
+              service.putExtra(SensorbergServiceMessage.EXTRA_GEOFENCE_DATA, geofenceData);
+              service.putExtra(SensorbergServiceMessage.EXTRA_GEOFENCE_ENTRY, entry);
+              context.startService(service);
             }
         } catch (IllegalArgumentException ex) {
             Logger.log.geofenceError("GeofencingEvent is invalid", ex);

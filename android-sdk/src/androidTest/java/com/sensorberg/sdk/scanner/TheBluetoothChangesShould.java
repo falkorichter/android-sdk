@@ -47,7 +47,7 @@ public class TheBluetoothChangesShould {
     SharedPreferences sharedPreferences;
 
     Scanner tested;
-    private long RANDOM_VALUE_THAT_IS_SHORTER_THAN_CLEAN_BEACONMAP_ON_RESTART_TIMEOUT_BUT_LONGER_THAN_EXIT_EVENT_DELAY = Utils.THIRTY_SECONDS + 1;
+    private long RANDOM_VALUE_THAT_IS_SHORTER_THAN_CLEAN_BEACONMAP_ON_RESTART_TIMEOUT_BUT_LONGER_THAN_EXIT_EVENT_DELAY = Utils.FORTY_SECONDS + 1;
     private SettingsManager settings;
 
     @Before

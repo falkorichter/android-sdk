@@ -45,7 +45,7 @@ public class TheBeaconMapShould {
 
         long firstSize = file.length();
 
-        tested.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), ScanEventType.ENTRY.getMask(), pairingId));
+        tested.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), 0, ScanEventType.ENTRY.getMask(), pairingId));
 
 
         Assertions.assertThat(firstSize).isNotEqualTo(file.length());
@@ -70,7 +70,7 @@ public class TheBeaconMapShould {
         File file = getTempFile();
         BeaconMap first = new BeaconMap(testFileManager, file);
 
-        first.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), ScanEventType.ENTRY.getMask(), pairingId));
+        first.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), 0, ScanEventType.ENTRY.getMask(), pairingId));
 
         tested = new BeaconMap(testFileManager, file);
 
@@ -87,7 +87,7 @@ public class TheBeaconMapShould {
         File file = getTempFile();
         BeaconMap first = new BeaconMap(testFileManager, file);
 
-        first.put(getNewBeaconId(), new EventEntry(noClock.now(), ScanEventType.ENTRY.getMask(), pairingId));
+        first.put(getNewBeaconId(), new EventEntry(noClock.now(), 0, ScanEventType.ENTRY.getMask(), pairingId));
 
         long originalSize = file.length();
 
@@ -107,7 +107,7 @@ public class TheBeaconMapShould {
     @Test
     public void remove_entries_that_match_the_filter() throws IOException {
         tested = new BeaconMap(testFileManager, getTempFile());
-        tested.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), ScanEventType.ENTRY.getMask(), pairingId));
+        tested.put(getNewBeaconId(), new EventEntry(System.currentTimeMillis(), 0, ScanEventType.ENTRY.getMask(), pairingId));
         Assertions.assertThat(tested.size()).isEqualTo(1);
 
         tested.filter(new BeaconMap.Filter() {
@@ -134,7 +134,7 @@ public class TheBeaconMapShould {
     public void should_be_readable_right_after_writing() throws Exception {
         File tempFile = getTempFile();
         tested = new BeaconMap(testFileManager, tempFile);
-        tested.put(getNewBeaconId(), new EventEntry(noClock.now(), ScanEventType.ENTRY.getMask(), pairingId));
+        tested.put(getNewBeaconId(), new EventEntry(noClock.now(), 0, ScanEventType.ENTRY.getMask(), pairingId));
 
         BeaconMap otherFile = new BeaconMap(testFileManager, tempFile);
         Assertions.assertThat(otherFile).isNotNull();

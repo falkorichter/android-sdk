@@ -38,7 +38,7 @@ public class Utils {
     public static final long VERY_LONG_TIME = Long.MAX_VALUE / 2L;
 
     public static final long GRACE_TIME = 5 * ONE_SECOND;
-    public static final long EXIT_TIME = 30 * ONE_SECOND;
+    public static final long EXIT_TIME = 40 * ONE_SECOND;
     public static final long EXIT_TIME_HAS_PASSED = EXIT_TIME + 1;
     public static final long EXIT_TIME_NOT_YET = EXIT_TIME -1;
 

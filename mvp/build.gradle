@@ -28,12 +28,10 @@ android {
 
 dependencies {
 
-    // add the latest version of Sensorberg SDK
-    compile 'com.sensorberg.sdk:android-sdk:2.3.2-RAILS'
-
-    // those are used for SDK test n debug
-    //compile 'com.sensorberg.sdk:android-sdk:master-SNAPSHOT'
-    //compile project(':android-sdk')
+    // Sensorberg SDK
+    // compile 'com.sensorberg.sdk:android-sdk:2.3.4-RAILS' // official release
+    // compile 'com.sensorberg.sdk:android-sdk:master-SNAPSHOT' // snapshot
+    compile project(':android-sdk') // debug-build
 
     // other dependencies
     compile 'com.android.support:design:25.2.0'

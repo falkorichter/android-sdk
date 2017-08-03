@@ -92,10 +92,10 @@ public class TheDefaultScannerSetupShould {
     }
 
     @Test
-    public void test_background_scanning_time_should_be_20seconds() {
+    public void test_background_scanning_time_should_be_15seconds() {
         tested.hostApplicationInBackground();
 
-        assertThat(tested.scanTime).isEqualTo(Utils.ONE_SECOND * 20);
+        assertThat(tested.scanTime).isEqualTo(Utils.ONE_SECOND * 15);
     }
 
     @Test
