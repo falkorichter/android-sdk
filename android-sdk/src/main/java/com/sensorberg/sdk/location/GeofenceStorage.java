@@ -300,7 +300,7 @@ public class GeofenceStorage {
 
     private Geofence buildGeofence(String fence) {
         try {
-            GeofenceData temp = new GeofenceData(fence, false);
+            GeofenceData temp = new GeofenceData(fence);
             return new Geofence.Builder()
                     .setRequestId(temp.getFence())
                     .setCircularRegion(

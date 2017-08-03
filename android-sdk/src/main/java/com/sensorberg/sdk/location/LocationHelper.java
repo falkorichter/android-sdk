@@ -35,12 +35,6 @@ public class LocationHelper {
     public String getGeohash() {
         location = acquireGeohash();
         if (location != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                if (!BuildConfig.DEBUG && location.isFromMockProvider()) {
-                    Logger.log.geofenceError("Mock location on non-debug build, ignoring", null);
-                    return null;
-                }
-            }
             return location.getGeohash();
         }
         return null;

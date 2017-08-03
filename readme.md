@@ -1,5 +1,5 @@
 [![Build Status](https://www.bitrise.io/app/e6905b8beaf57d31.svg?token=CJmf7u_wYIfobxAeADs_Tg&branch=master)](https://github.com/sensorberg-dev/android-sdk/tree/master)
-[![Join the chat at https://gitter.im/sensorberg-dev/android-sdk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sensorberg-dev/android-sdk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[ ![Download](https://api.bintray.com/packages/sensorberg/maven/android-sdk/images/download.svg) ](https://bintray.com/sensorberg/maven/android-sdk/_latestVersion)
 
 
 
