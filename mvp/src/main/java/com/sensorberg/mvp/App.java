@@ -1,6 +1,7 @@
 package com.sensorberg.mvp;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.sensorberg.BackgroundDetector;
 import com.sensorberg.SensorbergSdk;
@@ -9,13 +10,15 @@ import com.sensorberg.sdk.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sensorberg.mvp.SensorbergReceiver.initChannels;
+
 /**
  * Created by ronaldo on 2/9/17.
  */
 public class App extends Application {
 
   // TODO: replace this with your API KEY
-  private static final String SENSORBERG_KEY = "0e620cd907ac0f9b9cc407ece991f889c7401ba056554e1e7b293d887754afc8";
+  private static final String SENSORBERG_KEY = "0";
 
   static {
     Logger.enableVerboseLogging();
@@ -35,12 +38,16 @@ public class App extends Application {
       throw new IllegalArgumentException("Please register at portal.sensorberg.com and replace your API key on the `SENSORBERG_KEY` variable");
     }
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      initChannels(this);
+    }
+
     sensorbergSdk = new SensorbergSdk(this, SENSORBERG_KEY);
     sensorbergDetector = new BackgroundDetector(sensorbergSdk);
     registerActivityLifecycleCallbacks(sensorbergDetector);
 
     Map<String, String> attr = new HashMap<>();
-    attr.put("BLZ", "54321");
+    attr.put("value", "54321");
     SensorbergSdk.setAttributes(attr);
   }
 }
