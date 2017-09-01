@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 
 import com.sensorberg.ActionReceiver;
 import com.sensorberg.sdk.action.Action;
@@ -35,7 +35,7 @@ public class SensorbergReceiver extends ActionReceiver {
 
     @Override
     public Notification onGetNotification(Action action, BeaconId beaconId, Uri uri, Context context) {
-        return new NotificationCompat.Builder(context)
+        return new NotificationCompat.Builder(context, "default")
                 .setContentTitle("SensorbergSDK")
                 .setContentText(action.toString())
                 .setContentIntent(

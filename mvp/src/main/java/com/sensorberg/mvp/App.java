@@ -6,6 +6,8 @@ import android.os.Build;
 import com.sensorberg.BackgroundDetector;
 import com.sensorberg.SensorbergSdk;
 import com.sensorberg.sdk.Logger;
+import com.sensorberg.sdk.internal.transport.RetrofitApiServiceImpl;
+import com.sensorberg.sdk.internal.transport.RetrofitApiTransport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +47,5 @@ public class App extends Application {
     sensorbergSdk = new SensorbergSdk(this, SENSORBERG_KEY);
     sensorbergDetector = new BackgroundDetector(sensorbergSdk);
     registerActivityLifecycleCallbacks(sensorbergDetector);
-
-    Map<String, String> attr = new HashMap<>();
-    attr.put("value", "54321");
-    SensorbergSdk.setAttributes(attr);
   }
 }
