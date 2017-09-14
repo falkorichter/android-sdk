@@ -6,8 +6,6 @@ import android.os.Build;
 import com.sensorberg.BackgroundDetector;
 import com.sensorberg.SensorbergSdk;
 import com.sensorberg.sdk.Logger;
-import com.sensorberg.sdk.internal.transport.RetrofitApiServiceImpl;
-import com.sensorberg.sdk.internal.transport.RetrofitApiTransport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +42,17 @@ public class App extends Application {
       initChannels(this);
     }
 
+    //1 Initialize SDK
     sensorbergSdk = new SensorbergSdk(this, SENSORBERG_KEY);
+
+    //2 Set attributes
+    Map<String, String> attrs = new HashMap<>();
+    attrs.put("loggedIn", "1");
+
+    //3 Uncomment if you want attributes
+    //SensorbergSdk.setAttributes(attrs);
+
+    //4 Register background detector and activity callbacks
     sensorbergDetector = new BackgroundDetector(sensorbergSdk);
     registerActivityLifecycleCallbacks(sensorbergDetector);
   }
