@@ -6,11 +6,6 @@ import android.os.Build;
 import com.sensorberg.BackgroundDetector;
 import com.sensorberg.SensorbergSdk;
 import com.sensorberg.sdk.Logger;
-import com.sensorberg.sdk.internal.transport.RetrofitApiServiceImpl;
-import com.sensorberg.sdk.internal.transport.RetrofitApiTransport;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.sensorberg.mvp.SensorbergReceiver.initChannels;
 
