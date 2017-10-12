@@ -29,7 +29,7 @@ android {
 dependencies {
 
     // Sensorberg SDK
-    // compile 'com.sensorberg.sdk:android-sdk:2.3.4-RAILS' // official release
+    // compile 'com.sensorberg.sdk:android-sdk:2.3.5-RAILS' // official release
     // compile 'com.sensorberg.sdk:android-sdk:master-SNAPSHOT' // snapshot
     compile project(':android-sdk') // debug-build
 

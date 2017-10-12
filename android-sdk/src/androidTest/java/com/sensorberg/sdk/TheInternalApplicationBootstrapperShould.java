@@ -131,7 +131,7 @@ public class TheInternalApplicationBootstrapperShould {
         map.put("K1", "V1");
         map.put("K2", "V2");
 
-        tested.setAttributes(map);
+        InternalApplicationBootstrapper.saveAttributes(map, gson, sharedPreferences);
 
         tested = null;
         tested = new InternalApplicationBootstrapper(new DumbSucessTransport(), testServiceScheduler, testHandlerManager,

@@ -21,6 +21,8 @@ import com.sensorberg.sdk.model.BeaconId;
 
 public class SensorbergReceiver extends ActionReceiver {
 
+    private static final String OREO_NOTIFICATION_CHANNEL = "default";
+
     @Override
     public void onAction(Action action, BeaconId beaconId, Context context) { /**/ }
 
@@ -35,7 +37,7 @@ public class SensorbergReceiver extends ActionReceiver {
 
     @Override
     public Notification onGetNotification(Action action, BeaconId beaconId, Uri uri, Context context) {
-        return new NotificationCompat.Builder(context, "default")
+        return new NotificationCompat.Builder(context, OREO_NOTIFICATION_CHANNEL)
                 .setContentTitle("SensorbergSDK")
                 .setContentText(action.toString())
                 .setContentIntent(
@@ -54,7 +56,8 @@ public class SensorbergReceiver extends ActionReceiver {
     @TargetApi(Build.VERSION_CODES.O) public static void initChannels(Context context) {
         NotificationManager notificationManager =
             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel("default", "Location Info", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(
+                OREO_NOTIFICATION_CHANNEL, "Location Info", NotificationManager.IMPORTANCE_DEFAULT);
         channel.setDescription("Get here the latest location based information");
         notificationManager.createNotificationChannel(channel);
     }

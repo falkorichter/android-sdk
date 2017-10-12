@@ -51,6 +51,9 @@ public class DemoApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (SensorbergSdk.isSensorbergProcess(this)) {
+            return;
+        }
         Log.d(TAG, "onCreate application");
 
         boot = new SensorbergSdk(this, API_KEY);

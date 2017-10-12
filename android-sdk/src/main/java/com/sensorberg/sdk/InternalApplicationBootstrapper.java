@@ -49,7 +49,6 @@ import com.sensorberg.utils.ListUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -224,17 +223,17 @@ public class InternalApplicationBootstrapper extends MinimalBootstrapper impleme
         beaconActionHistoryPublisher.onConversionUpdate(conversion);
     }
 
-    public void setAttributes(HashMap<String, String> incoming) {
-        attributes = new TreeMap<>();
-        attributes.putAll(incoming);
+    void reloadAttributes() {
+        attributes = loadAttributes();
         resolver.setAttributes(attributes);
-        saveAttributes(attributes);
     }
 
-    private void saveAttributes(Map<String, String> attributes) {
-        String attrs = gson.toJson(attributes);
+    static void saveAttributes(Map<String, String> incoming, Gson gson, SharedPreferences preferences) {
+        SortedMap<String, String> attributes = new TreeMap<>();
+        attributes.putAll(incoming);
+        String json = gson.toJson(attributes);
         Logger.log.logAttributes("Saved " + attributes.size() + " attributes");
-        preferences.edit().putString(Constants.SharedPreferencesKeys.Data.TARGETING_ATTRIBUTES, attrs).apply();
+        preferences.edit().putString(Constants.SharedPreferencesKeys.Data.TARGETING_ATTRIBUTES, json).apply();
     }
 
     private SortedMap<String, String> loadAttributes() {
