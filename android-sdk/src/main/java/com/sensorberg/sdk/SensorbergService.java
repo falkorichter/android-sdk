@@ -3,6 +3,7 @@ package com.sensorberg.sdk;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.sensorberg.SensorbergSdk;
 import com.sensorberg.sdk.internal.PermissionChecker;
 import com.sensorberg.sdk.internal.interfaces.BluetoothPlatform;
@@ -37,6 +39,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import static com.sensorberg.sdk.SensorbergServiceMessage.MSG_ATTRIBUTES;
 
 @SuppressWarnings({"WeakerAccess", "pmd:TooManyMethods", "squid:S1200"})
 public class SensorbergService extends Service {
@@ -70,6 +74,9 @@ public class SensorbergService extends Service {
     @Named("androidPlatform")
     protected Platform platform;
 
+    @Inject Gson gson;
+    @Inject SharedPreferences preferences;
+
     protected MessengerList presentationDelegates = new MessengerList();
 
     protected InternalApplicationBootstrapper bootstrapper;
@@ -97,6 +104,10 @@ public class SensorbergService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.log.logServiceState("onStartCommand");
+        if (intent != null && intent.getIntExtra(SensorbergServiceMessage.EXTRA_GENERIC_TYPE, 0) == MSG_ATTRIBUTES) {
+            //Save attributes regardless of further processing.
+            saveAttributes(intent);
+        }
 
         if (!bluetoothPlatform.isBluetoothLowEnergySupported()) {
             logError("isBluetoothLowEnergySupported not true, shutting down.");
@@ -334,8 +345,8 @@ public class SensorbergService extends Service {
             case SensorbergServiceMessage.MSG_CONVERSION:
                 updateActionConversion(intent);
                 break;
-            case SensorbergServiceMessage.MSG_ATTRIBUTES:
-                updateAttributes(intent);
+            case MSG_ATTRIBUTES:
+                bootstrapper.reloadAttributes();
                 break;
             case SensorbergServiceMessage.MSG_SET_API_TOKEN: {
                 setApiToken(intent);
@@ -457,20 +468,19 @@ public class SensorbergService extends Service {
         bootstrapper.onConversionUpdate(conversion);
     }
 
-    protected void updateAttributes(Intent intent) {
+    protected void saveAttributes(Intent intent) {
         Serializable extra = intent.getSerializableExtra(SensorbergServiceMessage.EXTRA_ATTRIBUTES);
-        if (extra != null) {
-            try {
-                HashMap<String, String> map = (HashMap<String, String>) extra;
-                bootstrapper.setAttributes(map);
-            } catch (ClassCastException ex) {
-                logError("Intent contains no attributes data", ex);
-            }
-        } else {
+        if (extra == null) {
             logError("Intent has no valid attributes");
+            return;
+        }
+        try {
+            HashMap<String, String> attributes = (HashMap<String, String>) extra;
+            InternalApplicationBootstrapper.saveAttributes(attributes, gson, preferences);
+        } catch (ClassCastException ex) {
+            logError("Intent contains no attributes data", ex);
         }
     }
-
 
     protected void setApiToken(Intent intent) {
         if (intent.hasExtra(SensorbergServiceMessage.MSG_SET_API_TOKEN_TOKEN)) {
