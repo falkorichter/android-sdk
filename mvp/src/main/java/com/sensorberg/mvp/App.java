@@ -34,25 +34,30 @@ public class App extends Application {
   public void onCreate() {
     super.onCreate();
 
+    //0 Don't do anything on Sensorberg process
+    if (SensorbergSdk.isSensorbergProcess(this)) {
+      return;
+    }
+
+    //1 Have valid API key
     if (SENSORBERG_KEY == "0") {
       throw new IllegalArgumentException("Please register at portal.sensorberg.com and replace your API key on the `SENSORBERG_KEY` variable");
     }
 
+    //2 Call on Oreo to set up status bar notifications
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       initChannels(this);
     }
 
-    //1 Initialize SDK
+    //3 Initialize SDK
     sensorbergSdk = new SensorbergSdk(this, SENSORBERG_KEY);
 
-    //2 Set attributes
+    //4 Set attributes (optional)
     Map<String, String> attrs = new HashMap<>();
     attrs.put("loggedIn", "1");
+    SensorbergSdk.setAttributes(attrs);
 
-    //3 Uncomment if you want attributes
-    //SensorbergSdk.setAttributes(attrs);
-
-    //4 Register background detector and activity callbacks
+    //5 Register background detector and activity callbacks
     sensorbergDetector = new BackgroundDetector(sensorbergSdk);
     registerActivityLifecycleCallbacks(sensorbergDetector);
   }
