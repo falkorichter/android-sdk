@@ -5,7 +5,7 @@ android {
     buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion project.ext.targetSdkVersion
         manifestPlaceholders = [
                 applicationLabelAddition :  ""
@@ -62,6 +62,6 @@ android {
 dependencies {
     compile project(':android-sdk')
     compile ('com.android.support:multidex:1.0.1')
-    compile 'com.google.android.gms:play-services-ads:8.1.0'
-    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
+    compile 'com.android.support:support-v4:26.0.1'
 }

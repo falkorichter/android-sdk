@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "25.0.2"
+    buildToolsVersion project.ext.buildToolsVersion
+    compileSdkVersion project.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.sensorberg.mvp"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion project.ext.targetSdkVersion
         versionCode 2
         versionName "1.0.1"
 
