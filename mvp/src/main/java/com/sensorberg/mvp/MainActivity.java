@@ -1,6 +1,7 @@
 package com.sensorberg.mvp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +10,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.sensorberg.SensorbergSdk;
 import com.sensorberg.SensorbergSdkEventListener;
+import com.sensorberg.sdk.Conversion;
 import com.sensorberg.sdk.resolver.BeaconEvent;
 
 public class MainActivity extends AppCompatActivity implements SensorbergSdkEventListener {
@@ -18,6 +21,20 @@ public class MainActivity extends AppCompatActivity implements SensorbergSdkEven
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String conversion = getIntent().getStringExtra("conversion");
+        if (conversion != null) {
+            SensorbergSdk.notifyConversionStatus(this, conversion, Conversion.SUCCESS);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String conversion = getIntent().getStringExtra("conversion");
+        if (conversion != null) {
+            SensorbergSdk.notifyConversionStatus(this, conversion, Conversion.SUCCESS);
+        }
     }
 
     @Override
