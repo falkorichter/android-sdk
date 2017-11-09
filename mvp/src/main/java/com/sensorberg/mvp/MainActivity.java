@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements SensorbergSdkEven
 
     @Override
     public void presentBeaconEvent(BeaconEvent beaconEvent) {
+
+        SensorbergSdk.notifyConversionStatus(this, beaconEvent.getAction().getInstanceUuid(), Conversion.ACTION_SUPPRESSED);
+
         Snackbar.make(
                 findViewById(R.id.activity_main),
                 beaconEvent.toString(),
