@@ -3,6 +3,7 @@ buildscript {
 	System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -12,6 +13,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url 'https://maven.google.com' }
         //maven { url "https://jitpack.io" }
     }
