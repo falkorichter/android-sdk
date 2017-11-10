@@ -17,6 +17,12 @@ public class ActionConversion implements Parcelable {
     public static final String SHARED_PREFS_TAG = "com.sensorberg.sdk.InternalActionConversion";
 
     /**
+     * Host app tried/wanted to show notification,
+     * but user disabled notifications for the host app
+     */
+    public static final int TYPE_NOTIFICATION_DISABLED = -2;
+
+    /**
      * Action was given to the app, but app did not return cofirmation
      * that it made attempt to show it to the user. This is the situation where e.g.
      * app delays showing notification to the user for whatever reason.

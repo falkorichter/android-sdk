@@ -3,6 +3,7 @@ buildscript {
 	System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -12,11 +13,12 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url 'https://maven.google.com' }
         //maven { url "https://jitpack.io" }
     }
-    project.ext.SDK_VERSION = "2.3.5"
-    project.ext.RC_VERSION = "-RAILS"
+    project.ext.SDK_VERSION = "2.4"
+    project.ext.RC_VERSION = ""
     project.ext.buildToolsVersion = "26.0.2"
     project.ext.compileSdkVersion = 26
     project.ext.targetSdkVersion = 26
