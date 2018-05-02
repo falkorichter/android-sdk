@@ -35,14 +35,24 @@ public class ScannerBroadcastReceiver extends SensorbergBroadcastReceiver {
 
     private void pingScanner(Context context) {
         Intent service = SensorbergServiceIntents.getPingIntent(context);
-        context.startService(service);
+        startService(context, service);
     }
 
     private void startScan(Context context) {
-        context.startService(SensorbergServiceIntents.getBluetoothMessageIntent(context, true));
+        Intent service = SensorbergServiceIntents.getBluetoothMessageIntent(context, true);
+        startService(context, service);
     }
 
     private void stopScan(Context context) {
-        context.startService(SensorbergServiceIntents.getBluetoothMessageIntent(context, false));
+        Intent service = SensorbergServiceIntents.getBluetoothMessageIntent(context, false);
+        startService(context, service);
+    }
+
+    private void startService(Context context, Intent intent) {
+        try {
+            context.startService(intent);
+        } catch (Exception ex) {
+            Logger.log.logError("Couldn't start Sensorberg service in background", ex);
+        }
     }
 }
