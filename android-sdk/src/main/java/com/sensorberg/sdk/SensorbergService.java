@@ -40,6 +40,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static com.sensorberg.SensorbergSdk.blocked;
 import static com.sensorberg.sdk.SensorbergServiceMessage.MSG_ATTRIBUTES;
 
 @SuppressWarnings({"WeakerAccess", "pmd:TooManyMethods", "squid:S1200"})
@@ -84,6 +85,7 @@ public class SensorbergService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (blocked()) return;
         //we need to init this because SensorbergService can be started outside of SensorbergSdk constructor
         //(like for example when called from BroadcastReceiver)
         SensorbergSdk.init(getBaseContext());
@@ -103,6 +105,10 @@ public class SensorbergService extends Service {
     @SuppressWarnings("checkstyle:com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (blocked()) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         Logger.log.logServiceState("onStartCommand");
         if (intent != null && intent.getIntExtra(SensorbergServiceMessage.EXTRA_GENERIC_TYPE, 0) == MSG_ATTRIBUTES) {
             //Save attributes regardless of further processing.
@@ -121,7 +127,7 @@ public class SensorbergService extends Service {
 
         if (!new PermissionChecker(this).hasScanPermissionCheckAndroid6()) {
             logError("no permission to scan");
-            if(intent != null){
+            if (intent != null) {
                 String apikey = intent.getStringExtra(SensorbergServiceMessage.EXTRA_API_KEY);
                 if (apikey != null && !apikey.isEmpty()) {
                     ResolverConfiguration configuration = new ResolverConfiguration();
@@ -525,12 +531,14 @@ public class SensorbergService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        if (blocked()) return false;
         Logger.log.logServiceState("onUnbind");
         return false;
     }
 
     @Override
     public void onDestroy() {
+        if (blocked()) return;
         Logger.log.logServiceState("onDestroy");
         if (bootstrapper != null) {
             bootstrapper.stopScanning();
@@ -542,6 +550,10 @@ public class SensorbergService extends Service {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        if (blocked()) {
+            super.onTaskRemoved(rootIntent);
+            return;
+        }
         if (bootstrapper != null) {
             bootstrapper.saveAllDataBeforeDestroy();
         }

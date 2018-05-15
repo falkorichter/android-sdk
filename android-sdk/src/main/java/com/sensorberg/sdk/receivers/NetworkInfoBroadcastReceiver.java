@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sensorberg.SensorbergSdk.blocked;
+
 public class NetworkInfoBroadcastReceiver extends BroadcastReceiver {
 
     @SuppressWarnings("squid:S1444")
@@ -21,6 +23,7 @@ public class NetworkInfoBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (blocked()) return;
         triggerListenerWithCurrentState(context);
     }
 

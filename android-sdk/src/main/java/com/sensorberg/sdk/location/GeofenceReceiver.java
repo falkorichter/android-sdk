@@ -20,6 +20,8 @@ import com.sensorberg.sdk.SensorbergServiceMessage;
 
 import java.util.List;
 
+import static com.sensorberg.SensorbergSdk.blocked;
+
 public class GeofenceReceiver extends BroadcastReceiver {
 
     public static final String ACTION_GEOFENCE = "com.sensorberg.sdk.receiver.GEOFENCE";
@@ -39,6 +41,7 @@ public class GeofenceReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) { //TODO add wakelocks
+        if (blocked()) return;
         String action = intent.getAction();
         if (action == null || action.isEmpty()) {
             Logger.log.geofenceError("Received intent without action",null);

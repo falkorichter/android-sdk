@@ -14,11 +14,18 @@ import android.text.TextUtils;
 import com.sensorberg.di.Component;
 import com.sensorberg.sdk.Conversion;
 import com.sensorberg.sdk.Logger;
+import com.sensorberg.sdk.SensorbergService;
 import com.sensorberg.sdk.SensorbergServiceIntents;
 import com.sensorberg.sdk.SensorbergServiceMessage;
 import com.sensorberg.sdk.internal.interfaces.BluetoothPlatform;
 import com.sensorberg.sdk.internal.interfaces.Platform;
+import com.sensorberg.sdk.location.GeofenceReceiver;
+import com.sensorberg.sdk.receivers.GenericBroadcastReceiver;
+import com.sensorberg.sdk.receivers.NetworkInfoBroadcastReceiver;
+import com.sensorberg.sdk.receivers.PermissionBroadcastReceiver;
 import com.sensorberg.sdk.receivers.ScannerBroadcastReceiver;
+import com.sensorberg.sdk.receivers.SensorbergBroadcastReceiver;
+import com.sensorberg.sdk.receivers.SensorbergCodeReceiver;
 import com.sensorberg.sdk.resolver.BeaconEvent;
 import com.sensorberg.utils.AttributeValidator;
 
@@ -85,8 +92,9 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      * @param apiKey {@code String} Your API key that you can get from your Sensorberg dashboard.
      */
     public SensorbergSdk(Context ctx, String apiKey) {
-        if (ctx.getApplicationContext().getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.O) {
-            throw new UnsupportedOperationException("targetSdkVersion >= 26 (Oreo) is not currently supported");
+        if (blocked()) {
+            disableAll(context);
+            return;
         }
         init(ctx);
         getComponent().inject(this);
@@ -94,6 +102,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
     }
 
     public static void init(Context ctx) {
+        if (blocked()) return;
         context = ctx;
         initLibraries(context);
     }
@@ -124,6 +133,8 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      */
     public void registerEventListener(SensorbergSdkEventListener listener) {
 
+        if (blocked()) return;
+
         if (isSensorbergProcess(context)) {
             // the host app should only register for even listening on their own process
             return;
@@ -146,6 +157,9 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      *                 {@code registerEventListener}.
      */
     public void unregisterEventListener(SensorbergSdkEventListener listener) {
+
+        if (blocked()) return;
+
         listeners.remove(listener);
 
         if (listeners.isEmpty() && isPresentationDelegationEnabled()) {
@@ -175,22 +189,26 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
     }
 
     public void enableService(Context context, String apiKey) {
+        if (blocked()) return;
         ScannerBroadcastReceiver.setManifestReceiverEnabled(true, context);
         activateService(apiKey);
         hostApplicationInForeground();
     }
 
     public void disableService(Context context) {
+        if (blocked()) return;
         context.startService(SensorbergServiceIntents.getShutdownServiceIntent(context));
     }
 
     public void hostApplicationInBackground() {
+        if (blocked()) return;
         Logger.log.applicationStateChanged("hostApplicationInBackground");
         context.startService(SensorbergServiceIntents.getAppInBackgroundIntent(context));
         unRegisterFromPresentationDelegation();
     }
 
     public void hostApplicationInForeground() {
+        if (blocked()) return;
         context.startService(SensorbergServiceIntents.getAppInForegroundIntent(context));
         if (presentationDelegationEnabled) {
             registerForPresentationDelegation();
@@ -208,6 +226,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
     }
 
     public void changeAPIToken(String newApiToken) {
+        if (blocked()) return;
         if (!TextUtils.isEmpty(newApiToken)) {
             context.startService(SensorbergServiceIntents.getApiTokenIntent(context, newApiToken));
         } else {
@@ -216,6 +235,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
     }
 
     public void setAdvertisingIdentifier(String advertisingIdentifier) {
+        if (blocked()) return;
         Intent service = SensorbergServiceIntents.getAdvertisingIdentifierIntent(context, advertisingIdentifier);
         context.startService(service);
     }
@@ -226,10 +246,12 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      * @param enableLogging - true|false if to enable logging or not.
      */
     public void setLogging(boolean enableLogging) {
+        if (blocked()) return;
         context.startService(SensorbergServiceIntents.getServiceLoggingIntent(context, enableLogging));
     }
 
     public void sendLocationFlagToReceiver(int flagType) {
+        if (blocked()) return;
         Intent intent = new Intent();
         intent.setAction(SensorbergServiceMessage.EXTRA_LOCATION_PERMISSION);
         intent.putExtra("type", flagType);
@@ -244,6 +266,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      * @param conversion         the new conversion status
      */
     public static void notifyConversionStatus(Context context, String actionInstanceUuid, Conversion conversion) {
+        if (blocked()) return;
         Intent intent = SensorbergServiceIntents.getConversionIntent(context, actionInstanceUuid, conversion.getValue());
         context.startService(intent);
     }
@@ -257,6 +280,7 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      * @throws IllegalArgumentException if invalid key/value was passed.
      */
     public static void setAttributes(Map<String, String> attributes) throws IllegalArgumentException {
+        if (blocked()) return;
         HashMap<String, String> map;
         if (attributes != null) {
             map = new HashMap<>(attributes);
@@ -287,5 +311,19 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
             }
         }
         return processName.endsWith(":sensorberg");
+    }
+
+    public static boolean blocked() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+    }
+
+    private static void disableAll(Context context) {
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, SensorbergService.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, ScannerBroadcastReceiver.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, GenericBroadcastReceiver.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, SensorbergCodeReceiver.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, NetworkInfoBroadcastReceiver.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, PermissionBroadcastReceiver.class);
+        SensorbergBroadcastReceiver.setManifestReceiverEnabled(false, context, GeofenceReceiver.class);
     }
 }

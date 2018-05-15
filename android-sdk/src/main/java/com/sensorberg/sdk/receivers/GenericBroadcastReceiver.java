@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import static com.sensorberg.SensorbergSdk.blocked;
+
 public class GenericBroadcastReceiver extends SensorbergBroadcastReceiver{
 
     public static void setManifestReceiverEnabled(boolean enabled, Context context) {
@@ -15,6 +17,7 @@ public class GenericBroadcastReceiver extends SensorbergBroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (blocked()) return;
         Intent service = new Intent(context, SensorbergService.class);
         service.putExtras(intent.getExtras());
         try {

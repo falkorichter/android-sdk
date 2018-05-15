@@ -10,6 +10,8 @@ import com.sensorberg.sdk.internal.PermissionChecker;
 
 import javax.inject.Inject;
 
+import static com.sensorberg.SensorbergSdk.blocked;
+
 /**
  * @author skraynick
  * @date 16-06-13
@@ -21,6 +23,7 @@ public class PermissionBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (blocked()) return;
         final String action = intent.getAction();
 
         if (action.equals(SensorbergServiceMessage.EXTRA_LOCATION_PERMISSION)) {
