@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
+import static com.sensorberg.SensorbergSdk.blocked;
+
 public class ScannerBroadcastReceiver extends SensorbergBroadcastReceiver {
 
     public static void setManifestReceiverEnabled(boolean enabled, Context context) {
@@ -15,6 +17,7 @@ public class ScannerBroadcastReceiver extends SensorbergBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (blocked()) return;
         final String action = intent.getAction();
         if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);

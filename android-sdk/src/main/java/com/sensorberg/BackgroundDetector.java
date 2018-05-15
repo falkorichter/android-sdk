@@ -1,9 +1,5 @@
 package com.sensorberg;
 
-import com.sensorberg.sdk.SensorbergServiceIntents;
-import com.sensorberg.sdk.internal.PermissionChecker;
-import com.sensorberg.sdk.internal.interfaces.Platform;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
@@ -11,7 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.sensorberg.sdk.SensorbergServiceIntents;
+import com.sensorberg.sdk.internal.PermissionChecker;
+import com.sensorberg.sdk.internal.interfaces.Platform;
+
 import javax.inject.Inject;
+
+import static com.sensorberg.SensorbergSdk.blocked;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class BackgroundDetector implements Application.ActivityLifecycleCallbacks {
@@ -41,7 +43,13 @@ public class BackgroundDetector implements Application.ActivityLifecycleCallback
     protected PermissionChecker permissionChecker;
     private boolean hasPermission;
 
-    public BackgroundDetector(Platform.ForegroundStateListener foregroundStateListener){
+    public BackgroundDetector(Platform.ForegroundStateListener foregroundStateListener) {
+
+        if (blocked()) {
+            this.handler = null; // handler is final, I have to init it
+            return;
+        }
+
         this.handler = new Handler();
         this.foregroundStateListener = foregroundStateListener;
         SensorbergSdk.getComponent().inject(this);
@@ -60,6 +68,7 @@ public class BackgroundDetector implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityResumed(Activity activity) {
+        if (blocked()) return;
         handler.removeCallbacksAndMessages(null);
         this.isInForeground = true;
         handler.postDelayed(FOREGROUND, 500);
@@ -72,6 +81,7 @@ public class BackgroundDetector implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityPaused(Activity activity) {
+        if (blocked()) return;
         handler.removeCallbacksAndMessages(null);
         this.isInForeground = false;
         handler.postDelayed(BACKGROUND, 500);

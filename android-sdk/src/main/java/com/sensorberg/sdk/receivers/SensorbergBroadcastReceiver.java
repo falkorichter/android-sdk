@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 
 public abstract class SensorbergBroadcastReceiver extends BroadcastReceiver{
 
-    protected static void setManifestReceiverEnabled(boolean enabled, Context context, Class<?> relevantClass) {
+    public static void setManifestReceiverEnabled(boolean enabled, Context context, Class<?> relevantClass) {
         try{
             ComponentName component = new ComponentName(context, relevantClass);
             PackageManager pm = context.getPackageManager();
