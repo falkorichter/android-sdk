@@ -1,13 +1,15 @@
 package com.sensorberg.sdk;
 
+import android.bluetooth.BluetoothAdapter;
+
 import com.sensorberg.sdk.model.BeaconId;
 import com.sensorberg.sdk.resolver.BeaconEvent;
 import com.sensorberg.sdk.scanner.ScanEvent;
 
-import android.bluetooth.BluetoothAdapter;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.sensorberg.SensorbergSdk.blocked;
 
 public class Logger {
 
@@ -60,6 +62,10 @@ public class Logger {
     }
 
     public static void enableVerboseLogging() {
+        if (blocked()) {
+            android.util.Log.w(TAG, "Beacon Sdk not compatible with Android oreo and above. All functionality disabled");
+            return;
+        }
         log = new VerboseLogger();
     }
 

@@ -246,7 +246,10 @@ public class SensorbergSdk implements Platform.ForegroundStateListener {
      * @param enableLogging - true|false if to enable logging or not.
      */
     public void setLogging(boolean enableLogging) {
-        if (blocked()) return;
+        if (blocked()) {
+            android.util.Log.w("Sensorberg", "Beacon Sdk not compatible with Android oreo and above. All functionality disabled");
+            return;
+        }
         context.startService(SensorbergServiceIntents.getServiceLoggingIntent(context, enableLogging));
     }
 
