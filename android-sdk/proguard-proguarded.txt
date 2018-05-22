@@ -2,7 +2,6 @@
 
 -keepattributes Signature
 -keepattributes InnerClasses
--dontoptimize
 
 # Sensorberg SDK
 
