@@ -53,9 +53,9 @@ public class App extends Application {
     sensorbergSdk = new SensorbergSdk(this, SENSORBERG_KEY);
 
     //4 Set attributes (optional)
-    Map<String, String> attrs = new HashMap<>();
-    attrs.put("loggedIn", "1");
-    SensorbergSdk.setAttributes(attrs);
+    //Map<String, String> attrs = new HashMap<>();
+    //attrs.put("loggedIn", "1");
+    //SensorbergSdk.setAttributes(attrs);
 
     //5 Register background detector and activity callbacks
     sensorbergDetector = new BackgroundDetector(sensorbergSdk);

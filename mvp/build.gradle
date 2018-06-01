@@ -16,22 +16,20 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
-/*repositories{
-    maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
-}*/
-
 dependencies {
 
     // Sensorberg SDK
-    // compile 'com.sensorberg.sdk:android-sdk:2.3.5-RAILS' // official release
-    // compile 'com.sensorberg.sdk:android-sdk:master-SNAPSHOT' // snapshot
-    compile project(':android-sdk') // debug-build
+    compile 'com.sensorberg.sdk:android-sdk:2.6.1' // official release
 
     // other dependencies
     compile 'com.android.support:design:26.0.1'
