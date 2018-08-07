@@ -1,3 +1,8 @@
+
+# DEPRECATED !!!!
+## Check https://github.com/sensorberg-dev/notifications-sdk-android
+
+
 [![Build Status](https://www.bitrise.io/app/e6905b8beaf57d31.svg?token=CJmf7u_wYIfobxAeADs_Tg&branch=master)](https://github.com/sensorberg-dev/android-sdk/tree/master)
 [ ![Download](https://api.bintray.com/packages/sensorberg/maven/android-sdk/images/download.svg) ](https://bintray.com/sensorberg/maven/android-sdk/_latestVersion)
 
